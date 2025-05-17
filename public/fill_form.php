@@ -10,75 +10,59 @@ $password_required = false;
 $form_authenticated = false;
 
 if (!$form_id) {
-    // No form ID provided
     $error_message = "Form not found";
 } else {
-    // Get the form
     $form = get_form($form_id);
     
     if (!$form) {
         $error_message = "Form not found";
     } else {
-        // Check if the form requires authentication
         if ($form['require_auth'] && !isset($_SESSION['user_id'])) {
-            // Authentication required, but user is not logged in
             header("Location: login.php?redirect=fill_form.php?id=$form_id");
             exit;
         }
         
-        // Check if the user has already submitted this form and it doesn't allow multiple submissions
         if (isset($_SESSION['user_id']) && !$form['allow_multiple_submissions'] && 
             has_user_submitted_form($form_id, $_SESSION['user_id'])) {
             $error_message = "You have already submitted this form.";
         }
         
-        // Check if the form requires a password
         if (!empty($form['password'])) {
             $password_required = true;
             
-            // Check if password has been submitted and is correct
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_password'])) {
                 if ($_POST['form_password'] === $form['password']) {
                     $form_authenticated = true;
-                    
-                    // Store in session that this form is authenticated
                     $_SESSION['form_authenticated_' . $form_id] = true;
                 } else {
                     $error_message = "Incorrect password.";
                 }
             }
             
-            // Check if the form is already authenticated in the session
             if (isset($_SESSION['form_authenticated_' . $form_id]) && $_SESSION['form_authenticated_' . $form_id]) {
                 $form_authenticated = true;
             }
         } else {
-            // No password required
             $form_authenticated = true;
         }
         
-        // If authenticated and form submitted, process the submission
         if ($form_authenticated && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'submit_form') {
             $field_values = [];
             $fields = get_form_fields($form_id);
             $validation_errors = [];
             
-            // Validate and collect field values
             foreach ($fields as $field) {
                 $field_id = $field['id'];
                 $field_name = "field_{$field_id}";
                 $value = $_POST[$field_name] ?? '';
                 
-                // Check if required field is empty
                 if ($field['is_required'] && empty($value)) {
                     $validation_errors[] = "The field '{$field['name']}' is required.";
                 }
                 
-                // Add to field values
                 $field_values[$field_id] = $value;
             }
             
-            // If no validation errors, submit the form
             if (empty($validation_errors)) {
                 $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
                 $submission_id = submit_form($form_id, $field_values, $user_id);
@@ -95,7 +79,6 @@ if (!$form_id) {
     }
 }
 
-// Get form fields if form exists and is authenticated
 $fields = [];
 if (isset($form) && $form && $form_authenticated && empty($success_message)) {
     $fields = get_form_fields($form_id);

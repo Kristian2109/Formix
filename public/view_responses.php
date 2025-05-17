@@ -3,7 +3,6 @@ session_start();
 require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -18,17 +17,14 @@ if (!$form_id) {
     exit;
 }
 
-// Check if the form belongs to the current user
 $form = get_form($form_id);
 if (!$form || $form['user_id'] != $_SESSION['user_id']) {
     header('Location: my_forms.php');
     exit;
 }
 
-// Get form fields
 $fields = get_form_fields($form_id);
 
-// View a single submission
 if ($submission_id) {
     $submission = get_submission($submission_id);
     if (!$submission || $submission['form_id'] != $form_id) {
@@ -36,7 +32,6 @@ if ($submission_id) {
         $submission = null;
     }
 }
-// View all submissions
 else {
     $submissions = get_form_submissions($form_id);
 }
@@ -74,7 +69,6 @@ else {
     <?php if ($error_message): ?>
         <p class="error-message"><?= $error_message ?></p>
     <?php elseif (isset($submission)): ?>
-        <!-- Single submission view -->
         <div class="submission-detail">
             <div class="submission-meta">
                 <div class="meta-item">
@@ -114,7 +108,6 @@ else {
             </div>
         </div>
     <?php else: ?>
-        <!-- List of submissions -->
         <?php if (empty($submissions)): ?>
             <div class="empty-state">
                 <div class="empty-state-icon">
@@ -134,7 +127,7 @@ else {
             </div>
             
             <div class="submissions-table">
-                <div class="table-header">
+                <div class="table-header" style="grid-template-columns: <?= $form['require_auth'] ? '2fr 2fr 1fr' : '3fr 1fr' ?>;">
                     <div class="header-cell">Submission Date</div>
                     <?php if ($form['require_auth']): ?>
                         <div class="header-cell">Submitted By</div>
@@ -143,7 +136,7 @@ else {
                 </div>
                 
                 <?php foreach ($submissions as $sub): ?>
-                    <div class="table-row">
+                    <div class="table-row" style="grid-template-columns: <?= $form['require_auth'] ? '2fr 2fr 1fr' : '3fr 1fr' ?>;">
                         <div class="table-cell">
                             <?= date('M j, Y, g:i a', strtotime($sub['submission_time'])) ?>
                         </div>
@@ -169,177 +162,5 @@ else {
         <?php endif; ?>
     <?php endif; ?>
 </div>
-
-<style>
-.responses-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.back-link {
-    text-align: right;
-    display: flex;
-    gap: 10px;
-}
-
-.btn-success {
-    background-color: #4caf50;
-    color: white;
-}
-
-.btn-success:hover {
-    background-color: #388e3c;
-}
-
-.submissions-summary {
-    margin-bottom: 1.5rem;
-    color: var(--text-color);
-}
-
-.submissions-table {
-    background-color: var(--white);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-}
-
-.table-header {
-    display: grid;
-    grid-template-columns: <?= $form['require_auth'] ? '2fr 2fr 1fr' : '3fr 1fr' ?>;
-    background-color: var(--primary-light);
-    padding: 1rem;
-    font-weight: 600;
-    color: var(--primary-color);
-}
-
-.table-row {
-    display: grid;
-    grid-template-columns: <?= $form['require_auth'] ? '2fr 2fr 1fr' : '3fr 1fr' ?>;
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-}
-
-.table-row:last-child {
-    border-bottom: none;
-}
-
-.table-row:hover {
-    background-color: #f9f7ff;
-}
-
-.header-cell, .table-cell {
-    padding: 0 0.5rem;
-}
-
-.submission-detail {
-    background-color: var(--white);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    padding: 2rem;
-}
-
-.submission-meta {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--primary-light);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.meta-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.meta-label {
-    font-size: 0.9rem;
-    color: #777;
-    margin-bottom: 0.3rem;
-}
-
-.meta-value {
-    font-weight: 500;
-}
-
-.submission-values h3 {
-    color: var(--primary-color);
-    margin-bottom: 1.5rem;
-    font-size: 1.2rem;
-}
-
-.values-table {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.value-row {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 1rem;
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid #eee;
-}
-
-.value-field {
-    font-weight: 500;
-    color: var(--secondary-color);
-}
-
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-    background-color: var(--white);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-}
-
-.empty-state-icon {
-    font-size: 3rem;
-    color: var(--primary-light);
-    margin-bottom: 1rem;
-}
-
-.empty-actions {
-    margin-top: 2rem;
-}
-
-.no-data {
-    color: #777;
-    font-style: italic;
-    text-align: center;
-    padding: 2rem 0;
-}
-
-@media (max-width: 768px) {
-    .responses-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-    
-    .back-link {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .table-header, .table-row {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-    
-    .header-cell:not(:first-child) {
-        display: none;
-    }
-    
-    .table-cell {
-        padding: 0.3rem 0;
-    }
-}
-</style>
 
 <?php include '../templates/footer.php'; ?> 

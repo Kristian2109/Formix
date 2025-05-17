@@ -19,15 +19,24 @@
             echo '<link rel="stylesheet" href="assets/css/pages/home.css">';
             break;
         case 'login':
+            echo '<link rel="stylesheet" href="assets/css/pages/forms.css">';
+            break;
         case 'register':
+            echo '<link rel="stylesheet" href="assets/css/pages/forms.css">';
+            echo '<link rel="stylesheet" href="assets/css/pages/register.css">';
+            break;
         case 'my_forms':
             echo '<link rel="stylesheet" href="assets/css/pages/forms.css">';
+            echo '<link rel="stylesheet" href="assets/css/pages/my-forms.css">';
             break;
         case 'my_answers':
             echo '<link rel="stylesheet" href="assets/css/pages/my-answers.css">';
             break;
         case 'view_submission':
             echo '<link rel="stylesheet" href="assets/css/pages/view-submission.css">';
+            break;
+        case 'view_responses':
+            echo '<link rel="stylesheet" href="assets/css/pages/view-responses.css">';
             break;
         case 'create_form':
         case 'edit_form':
@@ -40,6 +49,15 @@
         case 'preview_form':
             echo '<link rel="stylesheet" href="assets/css/pages/form-fill.css">';
             echo '<link rel="stylesheet" href="assets/css/pages/preview.css">';
+            break;
+        case 'publish_form':
+            echo '<link rel="stylesheet" href="assets/css/pages/publish-form.css">';
+            break;
+        case 'user_submissions_chart':
+            echo '<link rel="stylesheet" href="assets/css/pages/user-submissions-chart.css">';
+            break;
+        case 'form_submissions_chart':
+            echo '<link rel="stylesheet" href="assets/css/pages/form-submissions-chart.css">';
             break;
         default:
             break;

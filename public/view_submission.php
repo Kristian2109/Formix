@@ -3,7 +3,6 @@ session_start();
 require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -17,10 +16,8 @@ if (!$submission_id) {
     exit;
 }
 
-// Get the submission
 $submission = get_submission($submission_id);
 
-// Check if submission exists and belongs to the current user
 if (!$submission || $submission['user_id'] != $_SESSION['user_id']) {
     $error_message = "You don't have access to this submission.";
 }

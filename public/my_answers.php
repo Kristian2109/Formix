@@ -81,13 +81,4 @@ $submissions = get_user_submissions($_SESSION['user_id']);
     <?php endif; ?>
 </div>
 
-<style>
-/* Add styles for page actions */
-.page-actions {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: center;
-}
-</style>
-
 <?php include '../templates/footer.php'; ?> 

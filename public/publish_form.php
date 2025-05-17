@@ -3,7 +3,6 @@ session_start();
 require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -16,17 +15,14 @@ if (!$form_id) {
     exit;
 }
 
-// Check if the form belongs to the current user
 $form = get_form($form_id);
 if (!$form || $form['user_id'] != $_SESSION['user_id']) {
     header('Location: my_forms.php');
     exit;
 }
 
-// Get form fields to check if there are any
 $fields = get_form_fields($form_id);
 
-// Get hostname for generating form URL
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'];
 $form_url = "{$protocol}://{$host}/fill_form.php?id={$form_id}";
@@ -163,126 +159,5 @@ function copyFormUrl() {
     }, 3000);
 }
 </script>
-
-<style>
-.publish-container {
-    background-color: var(--white);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    margin-bottom: 2rem;
-}
-
-.publish-section {
-    padding: 2rem;
-    border-bottom: 1px solid var(--primary-light);
-}
-
-.publish-section:last-child {
-    border-bottom: none;
-}
-
-.publish-section h3 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-}
-
-.publish-section h3 i {
-    margin-right: 0.5rem;
-}
-
-.form-url-container {
-    display: flex;
-    margin: 1.5rem 0 1rem;
-}
-
-.form-url {
-    flex: 1;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-    font-size: 1rem;
-    background-color: #f9f9f9;
-}
-
-.form-url-container .btn {
-    border-radius: 0 4px 4px 0;
-}
-
-.copy-message {
-    color: #4caf50;
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.settings-list {
-    margin: 1.5rem 0;
-}
-
-.setting-item {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
-}
-
-.setting-item:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-}
-
-.setting-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-}
-
-.setting-name {
-    font-weight: 500;
-}
-
-.setting-description {
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.status-enabled {
-    color: #4caf50;
-    font-weight: 500;
-}
-
-.status-disabled {
-    color: #757575;
-    font-weight: 500;
-}
-
-.settings-actions, .responses-actions {
-    margin-top: 1.5rem;
-    display: flex;
-    gap: 1rem;
-}
-
-.alert {
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-}
-
-.alert-warning {
-    background-color: #fff8e1;
-    border: 1px solid #ffe082;
-    color: #ff8f00;
-}
-
-.alert i {
-    font-size: 1.5rem;
-    margin-right: 1rem;
-}
-</style>
 
 <?php include '../templates/footer.php'; ?> 
