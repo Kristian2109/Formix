@@ -201,31 +201,4 @@ function get_field_type_label($type) {
     </div>
 </div>
 
-<style>
-.required-field-row {
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.required-field-container {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 30px;
-}
-
-.checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    min-width: 140px;
-}
-
-.hint-text {
-    margin: 0;
-    flex: 1;
-}
-</style>
-
 <?php include '../templates/footer.php'; ?> 

@@ -71,19 +71,20 @@
 }
 
 /* Checkbox styling */
-.form-group .checkbox-wrapper {
+.checkbox-wrapper {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  min-width: 140px;
 }
 
-.form-group .checkbox-wrapper input[type="checkbox"] {
+.checkbox-wrapper input[type="checkbox"] {
   margin-right: 0.5rem;
   width: 18px;
   height: 18px;
 }
 
-.form-group .checkbox-wrapper label {
+.checkbox-wrapper label {
   margin-bottom: 0;
   font-weight: normal;
 }
@@ -92,9 +93,23 @@
 .hint-text {
   font-size: 0.85rem;
   color: #666;
-  margin-top: 0.5rem;
   line-height: 1.4;
   max-width: 600px;
+  margin: 0;
+}
+
+/* Required field row styling */
+.required-field-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.required-field-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 30px;
 }
 
 /* Form fields list */
@@ -244,19 +259,6 @@
   display: block;
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
-}
-
-.preview-section {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  border: 1px dashed var(--primary-light);
-  border-radius: 6px;
-}
-
-.preview-title {
-  color: var(--primary-color);
-  margin-bottom: 1rem;
-  font-weight: 500;
 }
 
 .drag-handle {
