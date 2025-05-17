@@ -1,0 +1,8 @@
+/* Base styles - Always imported */
+@import 'base/variables.css';
+@import 'base/reset.css';
+@import 'base/buttons.css';
+
+/* Template styles - Always imported */  
+@import 'templates/header.css';
+@import 'templates/footer.css'; 
