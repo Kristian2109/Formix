@@ -18,11 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $description = $_POST['form_description'] ?? '';
     $password = $_POST['form_password'] ?? '';
     $allow_multiple = isset($_POST['allow_multiple']) ? true : false;
+    $require_auth = isset($_POST['require_auth']) ? true : false;
     
     if (empty($name)) {
         $message = "Form name is required";
     } else {
-        $form_id = create_form($_SESSION['user_id'], $name, $description, $password, $allow_multiple);
+        $form_id = create_form($_SESSION['user_id'], $name, $description, $password, $allow_multiple, $require_auth);
         if ($form_id) {
             header("Location: edit_form.php?id={$form_id}");
             exit;
@@ -81,6 +82,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </label>
                     <p class="hint-text">If checked, users can submit the form multiple times</p>
                 </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="require_auth" id="require_auth">
+                        Require authentication to submit this form
+                    </label>
+                    <p class="hint-text">If checked, users must be logged in to submit this form</p>
+                </div>
+                
+                <div class="auth-settings" style="display: none; padding-left: 25px; margin-top: 10px;">
+                    <p class="hint-text"><i class="fas fa-info-circle"></i> When authentication is required:</p>
+                    <ul class="hint-list">
+                        <li>Only logged-in users can submit the form</li>
+                        <li>Submissions will be linked to the user's account</li>
+                        <li>You'll be able to see who submitted each response</li>
+                    </ul>
+                </div>
             </div>
             
             <div class="form-actions">
@@ -89,5 +107,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const requireAuthCheckbox = document.getElementById('require_auth');
+    const authSettings = document.querySelector('.auth-settings');
+    
+    requireAuthCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            authSettings.style.display = 'block';
+        } else {
+            authSettings.style.display = 'none';
+        }
+    });
+});
+</script>
+
+<style>
+.hint-list {
+    margin: 0.5rem 0 0 1.5rem;
+    color: #666;
+    font-size: 0.85rem;
+}
+.hint-list li {
+    margin-bottom: 0.3rem;
+}
+</style>
 
 <?php include '../templates/footer.php'; ?> 

@@ -1,12 +1,32 @@
 <?php
 require_once '../logic/auth.php';
+require_once '../logic/forms.php';
 session_start();
+
+// Initialize both sets of tables in the single database
+init_auth_db();
+init_forms_db();
+
+// Redirect if already logged in
+if (isset($_SESSION['user_id'])) {
+    $redirect = $_GET['redirect'] ?? 'index.php';
+    header('Location: ' . $redirect);
+    exit;
+}
+
+// Store redirect URL
+$redirect = $_GET['redirect'] ?? 'index.php';
+$message = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
+    $redirect = $_POST['redirect'] ?? 'index.php';
+    
     $message = login_user($email, $password);
+    
     if (!$message) {
-        header('Location: index.php');
+        header('Location: ' . $redirect);
         exit;
     }
 }
@@ -26,9 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="password" id="password" name="password" required>
         </div>
         
+        <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
+        
         <button type="submit">Sign In</button>
         
-        <?php if (isset($message)): ?>
+        <?php if ($message): ?>
             <p class="error-message"><?= $message ?></p>
         <?php endif; ?>
         
