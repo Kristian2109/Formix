@@ -12,11 +12,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <?php include '../templates/header.php'; ?>
-<h2>Login</h2>
-<form method="POST">
-    Email: <input type="email" name="email" required><br>
-    Password: <input type="password" name="password" required><br>
-    <button type="submit">Login</button>
-</form>
-<p><?= $message ?? '' ?></p>
+<div class="container">
+    <h2>Login to Your Account</h2>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <button type="submit">Sign In</button>
+        
+        <?php if (isset($message)): ?>
+            <p class="error-message"><?= $message ?></p>
+        <?php endif; ?>
+        
+        <p class="form-footer">
+            Don't have an account? <a href="register.php">Register here</a>
+        </p>
+    </form>
+</div>
 <?php include '../templates/footer.php'; ?>
