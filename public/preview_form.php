@@ -42,42 +42,89 @@ $fields = get_form_fields($form_id);
         <?php else: ?>
             <div class="form-container">
                 <div class="form-header">
-                    <h3><?= htmlspecialchars($form['name']) ?></h3>
+                    <h2><?= htmlspecialchars($form['name']) ?></h2>
                     <?php if (!empty($form['description'])): ?>
                         <p class="form-description"><?= htmlspecialchars($form['description']) ?></p>
+                    <?php endif; ?>
+                    
+                    <?php if ($form['require_auth']): ?>
+                        <div class="auth-info">
+                            <i class="fas fa-user"></i>
+                            <span>Users will need to be logged in to submit this form</span>
+                        </div>
                     <?php endif; ?>
                 </div>
                 
                 <form class="public-form">
                     <?php foreach ($fields as $field): ?>
-                        <div class="form-group">
-                            <label for="field_<?= $field['id'] ?>">
-                                <?= htmlspecialchars($field['name']) ?>
-                                <?php if ($field['is_required']): ?>
-                                    <span class="field-required">*</span>
-                                <?php endif; ?>
-                            </label>
+                        <div class="form-group field-type-<?= $field['type'] ?>">
+                            <div class="field-label">
+                                <span class="field-icon">
+                                    <?php if ($field['type'] === 'text'): ?>
+                                        <i class="fas fa-font"></i>
+                                    <?php elseif ($field['type'] === 'number'): ?>
+                                        <i class="fas fa-hashtag"></i>
+                                    <?php elseif ($field['type'] === 'textarea'): ?>
+                                        <i class="fas fa-align-left"></i>
+                                    <?php endif; ?>
+                                </span>
+                                <label for="field_<?= $field['id'] ?>">
+                                    <?= htmlspecialchars($field['name']) ?>
+                                    <?php if ($field['is_required']): ?>
+                                        <span class="field-required">*</span>
+                                    <?php endif; ?>
+                                </label>
+                            </div>
                             
-                            <?php if ($field['type'] === 'textarea'): ?>
-                                <textarea 
-                                    id="field_<?= $field['id'] ?>" 
-                                    name="field_<?= $field['id'] ?>" 
-                                    rows="4"
-                                    <?= $field['is_required'] ? 'required' : '' ?>
-                                ></textarea>
-                            <?php else: ?>
-                                <input 
-                                    type="<?= $field['type'] ?>" 
-                                    id="field_<?= $field['id'] ?>" 
-                                    name="field_<?= $field['id'] ?>"
-                                    <?= $field['is_required'] ? 'required' : '' ?>
-                                >
+                            <div class="input-wrapper">
+                                <?php if ($field['type'] === 'textarea'): ?>
+                                    <textarea 
+                                        id="field_<?= $field['id'] ?>" 
+                                        name="field_<?= $field['id'] ?>" 
+                                        rows="4"
+                                        placeholder="Enter your response here..."
+                                        <?= $field['is_required'] ? 'required' : '' ?>
+                                    ></textarea>
+                                    <span class="input-icon">
+                                        <i class="fas fa-align-left"></i>
+                                    </span>
+                                <?php elseif ($field['type'] === 'number'): ?>
+                                    <input 
+                                        type="number" 
+                                        id="field_<?= $field['id'] ?>" 
+                                        name="field_<?= $field['id'] ?>"
+                                        placeholder="Enter a number"
+                                        <?= $field['is_required'] ? 'required' : '' ?>
+                                    >
+                                    <span class="input-icon">
+                                        <i class="fas fa-hashtag"></i>
+                                    </span>
+                                <?php else: ?>
+                                    <input 
+                                        type="text" 
+                                        id="field_<?= $field['id'] ?>" 
+                                        name="field_<?= $field['id'] ?>"
+                                        placeholder="Enter your response here..."
+                                        <?= $field['is_required'] ? 'required' : '' ?>
+                                    >
+                                    <span class="input-icon">
+                                        <i class="fas fa-font"></i>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <?php if ($field['type'] === 'number'): ?>
+                                <div class="field-description">
+                                    Enter numerical values only
+                                </div>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                     
                     <div class="form-actions">
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
                     </div>
                 </form>
             </div>
@@ -93,63 +140,5 @@ $fields = get_form_fields($form_id);
         </a>
     </div>
 </div>
-
-<style>
-.preview-header {
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.preview-note {
-    color: #777;
-    font-style: italic;
-}
-
-.form-preview {
-    max-width: 800px;
-    margin: 0 auto 2rem;
-}
-
-.empty-fields {
-    background-color: var(--white);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    padding: 2rem;
-    text-align: center;
-}
-
-.form-container {
-    background-color: var(--white);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    padding: 2rem;
-}
-
-.form-header {
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--primary-light);
-    padding-bottom: 1rem;
-}
-
-.form-header h3 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-
-.form-description {
-    color: var(--text-color);
-}
-
-.public-form .form-group {
-    margin-bottom: 1.5rem;
-}
-
-.preview-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-</style>
 
 <?php include '../templates/footer.php'; ?> 

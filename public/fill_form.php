@@ -105,9 +105,12 @@ if (isset($form) && $form && $form_authenticated && empty($success_message)) {
 
 <div class="container">
     <?php if ($error_message): ?>
-        <div class="error-message"><?= $error_message ?></div>
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <p><?= $error_message ?></p>
+        </div>
         <?php if (strpos($error_message, "already submitted") !== false): ?>
-            <div class="action-buttons" style="margin-top: 20px; text-align: center;">
+            <div class="action-buttons">
                 <a href="index.php" class="btn btn-primary">Return to Home</a>
             </div>
         <?php endif; ?>
@@ -146,7 +149,8 @@ if (isset($form) && $form && $form_authenticated && empty($success_message)) {
                 
                 <?php if ($form['require_auth'] && isset($_SESSION['user_id'])): ?>
                     <div class="auth-info">
-                        <p><i class="fas fa-user"></i> You are submitting this form as <?= htmlspecialchars($_SESSION['email'] ?? 'an authenticated user') ?></p>
+                        <i class="fas fa-user"></i>
+                        <span>You are submitting this form as <?= htmlspecialchars($_SESSION['email'] ?? 'an authenticated user') ?></span>
                     </div>
                 <?php endif; ?>
             </div>
@@ -155,127 +159,78 @@ if (isset($form) && $form && $form_authenticated && empty($success_message)) {
                 <input type="hidden" name="action" value="submit_form">
                 
                 <?php foreach ($fields as $field): ?>
-                    <div class="form-group">
-                        <label for="field_<?= $field['id'] ?>">
-                            <?= htmlspecialchars($field['name']) ?>
-                            <?php if ($field['is_required']): ?>
-                                <span class="field-required">*</span>
-                            <?php endif; ?>
-                        </label>
+                    <div class="form-group field-type-<?= $field['type'] ?>">
+                        <div class="field-label">
+                            <span class="field-icon">
+                                <?php if ($field['type'] === 'text'): ?>
+                                    <i class="fas fa-font"></i>
+                                <?php elseif ($field['type'] === 'number'): ?>
+                                    <i class="fas fa-hashtag"></i>
+                                <?php elseif ($field['type'] === 'textarea'): ?>
+                                    <i class="fas fa-align-left"></i>
+                                <?php endif; ?>
+                            </span>
+                            <label for="field_<?= $field['id'] ?>">
+                                <?= htmlspecialchars($field['name']) ?>
+                                <?php if ($field['is_required']): ?>
+                                    <span class="field-required">*</span>
+                                <?php endif; ?>
+                            </label>
+                        </div>
                         
-                        <?php if ($field['type'] === 'textarea'): ?>
-                            <textarea 
-                                id="field_<?= $field['id'] ?>" 
-                                name="field_<?= $field['id'] ?>" 
-                                rows="4"
-                                <?= $field['is_required'] ? 'required' : '' ?>
-                            ></textarea>
-                        <?php else: ?>
-                            <input 
-                                type="<?= $field['type'] ?>" 
-                                id="field_<?= $field['id'] ?>" 
-                                name="field_<?= $field['id'] ?>"
-                                <?= $field['is_required'] ? 'required' : '' ?>
-                            >
+                        <div class="input-wrapper">
+                            <?php if ($field['type'] === 'textarea'): ?>
+                                <textarea 
+                                    id="field_<?= $field['id'] ?>" 
+                                    name="field_<?= $field['id'] ?>" 
+                                    rows="4"
+                                    placeholder="Enter your response here..."
+                                    <?= $field['is_required'] ? 'required' : '' ?>
+                                ></textarea>
+                                <span class="input-icon">
+                                    <i class="fas fa-align-left"></i>
+                                </span>
+                            <?php elseif ($field['type'] === 'number'): ?>
+                                <input 
+                                    type="number" 
+                                    id="field_<?= $field['id'] ?>" 
+                                    name="field_<?= $field['id'] ?>"
+                                    placeholder="Enter a number"
+                                    <?= $field['is_required'] ? 'required' : '' ?>
+                                >
+                                <span class="input-icon">
+                                    <i class="fas fa-hashtag"></i>
+                                </span>
+                            <?php else: ?>
+                                <input 
+                                    type="text" 
+                                    id="field_<?= $field['id'] ?>" 
+                                    name="field_<?= $field['id'] ?>"
+                                    placeholder="Enter your response here..."
+                                    <?= $field['is_required'] ? 'required' : '' ?>
+                                >
+                                <span class="input-icon">
+                                    <i class="fas fa-font"></i>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <?php if ($field['type'] === 'number'): ?>
+                            <div class="field-description">
+                                Enter numerical values only
+                            </div>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
                 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit
+                    </button>
                 </div>
             </form>
         </div>
     <?php endif; ?>
 </div>
-
-<style>
-.form-container {
-    background-color: var(--white);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.form-header {
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--primary-light);
-    padding-bottom: 1rem;
-}
-
-.form-description {
-    color: var(--text-color);
-    margin-top: 0.5rem;
-}
-
-.auth-info {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #f4f0ff;
-    border-radius: 4px;
-    font-size: 0.9rem;
-}
-
-.auth-info i {
-    color: var(--primary-color);
-    margin-right: 0.3rem;
-}
-
-.form-password-container {
-    background-color: var(--white);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    padding: 2rem;
-    max-width: 500px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.password-form {
-    max-width: 300px;
-    margin: 2rem auto 0;
-}
-
-.success-message {
-    background-color: #e8f5e9;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    padding: 3rem 2rem;
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.success-message i {
-    color: #4caf50;
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-.success-message h2 {
-    color: #2e7d32;
-    margin-bottom: 1rem;
-}
-
-.action-buttons {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.error-message {
-    background-color: #ffebee;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    padding: 1.5rem;
-    color: #c62828;
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-}
-</style>
 
 <?php include '../templates/footer.php'; ?> 

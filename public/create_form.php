@@ -56,13 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="form-group">
                     <label for="form_name">Form Name</label>
                     <input type="text" id="form_name" name="form_name" required>
-                    <p class="hint-text">This will be displayed as the title of your form</p>
+                    <p class="hint-text">This will be displayed as the title of your form. Choose something descriptive that your respondents will recognize.</p>
                 </div>
                 
                 <div class="form-group">
                     <label for="form_description">Description (Optional)</label>
                     <textarea id="form_description" name="form_description" rows="3"></textarea>
-                    <p class="hint-text">Provide instructions or context for your form</p>
+                    <p class="hint-text">Provide instructions or context for your form. A good description helps people understand why they're filling out your form and what you'll do with their responses.</p>
                 </div>
             </div>
             
@@ -72,23 +72,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="form-group">
                     <label for="form_password">Password Protection (Optional)</label>
                     <input type="password" id="form_password" name="form_password">
-                    <p class="hint-text">If set, users will need this password to access your form</p>
+                    <p class="hint-text">If set, users will need this password to access your form. This adds a layer of security to restrict who can view and submit your form.</p>
                 </div>
                 
                 <div class="form-group">
-                    <label>
+                    <div class="checkbox-wrapper">
                         <input type="checkbox" name="allow_multiple" id="allow_multiple">
-                        Allow multiple submissions from the same user
-                    </label>
-                    <p class="hint-text">If checked, users can submit the form multiple times</p>
+                        <label for="allow_multiple">Allow multiple submissions from the same user</label>
+                    </div>
+                    <p class="hint-text">If checked, users can submit the form multiple times. Otherwise, they can only submit once.</p>
                 </div>
                 
                 <div class="form-group">
-                    <label>
+                    <div class="checkbox-wrapper">
                         <input type="checkbox" name="require_auth" id="require_auth">
-                        Require authentication to submit this form
-                    </label>
-                    <p class="hint-text">If checked, users must be logged in to submit this form</p>
+                        <label for="require_auth">Require authentication to submit this form</label>
+                    </div>
+                    <p class="hint-text">If checked, users must be logged in to submit this form.</p>
                 </div>
                 
                 <div class="auth-settings" style="display: none; padding-left: 25px; margin-top: 10px;">

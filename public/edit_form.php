@@ -141,26 +141,44 @@ function get_field_type_label($type) {
                     <div class="editor-field">
                         <label for="field_name">Field Name</label>
                         <input type="text" id="field_name" name="field_name" required>
-                        <p class="hint-text">This will be shown as the field label</p>
+                        <p class="hint-text">This will be shown as the field label to your form respondents</p>
                     </div>
                     
                     <div class="editor-field">
-                        <label for="field_type">Field Type</label>
-                        <select id="field_type" name="field_type" required>
-                            <option value="text">Text Input</option>
-                            <option value="number">Number Input</option>
-                            <option value="textarea">Text Area</option>
-                        </select>
+                        <label>Field Type</label>
+                        <div class="field-type-selector">
+                            <div class="field-type-option">
+                                <input type="radio" id="type_text" name="field_type" value="text" checked>
+                                <label for="type_text">
+                                    <i class="fas fa-font"></i>
+                                    Text Input
+                                </label>
+                            </div>
+                            <div class="field-type-option">
+                                <input type="radio" id="type_number" name="field_type" value="number">
+                                <label for="type_number">
+                                    <i class="fas fa-hashtag"></i>
+                                    Number
+                                </label>
+                            </div>
+                            <div class="field-type-option">
+                                <input type="radio" id="type_textarea" name="field_type" value="textarea">
+                                <label for="type_textarea">
+                                    <i class="fas fa-align-left"></i>
+                                    Text Area
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="editor-row">
                     <div class="editor-field">
-                        <label>
+                        <div class="checkbox-wrapper">
                             <input type="checkbox" name="is_required" id="is_required">
-                            Required Field
-                        </label>
-                        <p class="hint-text">If checked, users must fill out this field</p>
+                            <label for="is_required">Required Field</label>
+                        </div>
+                        <p class="hint-text">If checked, users must fill out this field to submit the form</p>
                     </div>
                 </div>
                 
@@ -195,13 +213,12 @@ function get_field_type_label($type) {
 <script>
 // Simple preview functionality
 document.addEventListener('DOMContentLoaded', function() {
-    const fieldType = document.getElementById('field_type');
+    const typeRadios = document.querySelectorAll('input[name="field_type"]');
     const isRequired = document.getElementById('is_required');
     const fieldName = document.getElementById('field_name');
     const previewContainer = document.getElementById('fieldPreview');
     const requiredMark = previewContainer.querySelector('.field-required');
-    const previewLabel = previewContainer.querySelector('label');
-    const previewInput = previewContainer.querySelector('.preview-input');
+    let previewInput = previewContainer.querySelector('.preview-input');
     
     // Update preview on change
     function updatePreview() {
@@ -211,27 +228,41 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show/hide required marker
         requiredMark.style.display = isRequired.checked ? 'inline' : 'none';
         
+        // Get selected field type
+        let selectedType = 'text'; // default
+        typeRadios.forEach(radio => {
+            if (radio.checked) {
+                selectedType = radio.value;
+            }
+        });
+        
         // Update input type
-        if (fieldType.value === 'textarea') {
+        if (selectedType === 'textarea') {
             if (previewInput.tagName !== 'TEXTAREA') {
                 const textarea = document.createElement('textarea');
                 textarea.className = 'preview-input';
                 textarea.rows = 3;
                 previewInput.replaceWith(textarea);
+                previewInput = textarea;
             }
         } else {
             if (previewInput.tagName === 'TEXTAREA') {
                 const input = document.createElement('input');
-                input.type = fieldType.value;
+                input.type = selectedType;
                 input.className = 'preview-input';
                 previewInput.replaceWith(input);
+                previewInput = input;
             } else {
-                previewInput.type = fieldType.value;
+                previewInput.type = selectedType;
             }
         }
     }
     
-    fieldType.addEventListener('change', updatePreview);
+    // Add event listeners to all radio buttons
+    typeRadios.forEach(radio => {
+        radio.addEventListener('change', updatePreview);
+    });
+    
     isRequired.addEventListener('change', updatePreview);
     fieldName.addEventListener('input', updatePreview);
     

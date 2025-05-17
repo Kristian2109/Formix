@@ -31,6 +31,13 @@
             echo '<link rel="stylesheet" href="assets/css/pages/forms.css">';
             echo '<link rel="stylesheet" href="assets/css/pages/form-builder.css">';
             break;
+        case 'fill_form':
+            echo '<link rel="stylesheet" href="assets/css/pages/form-fill.css">';
+            break;
+        case 'preview_form':
+            echo '<link rel="stylesheet" href="assets/css/pages/form-fill.css">';
+            echo '<link rel="stylesheet" href="assets/css/pages/preview.css">';
+            break;
         default:
             // Default CSS if needed
             break;
