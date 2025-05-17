@@ -18,9 +18,15 @@
         </div>
         <div class="nav-links">
             <a href="index.php">Home</a>
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
-            <a href="logout.php">Logout</a>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="create_form.php">Create Form</a>
+                <a href="my_forms.php">My Forms</a>
+                <a href="my_answers.php">My Answers</a>
+                <a href="logout.php">Logout</a>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+                <a href="register.php">Register</a>
+            <?php endif; ?>
         </div>
     </nav>
     <hr>
