@@ -1,0 +1,168 @@
+/* Form builder specific styles */
+.form-builder {
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  padding: 2rem;
+}
+
+.form-builder-header {
+  margin-bottom: 2rem;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--primary-light);
+}
+
+.form-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+/* Form fields list */
+.fields-list {
+  margin-top: 1.5rem;
+}
+
+.field-item {
+  background-color: #f9f7ff;
+  border: 1px solid var(--primary-light);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.field-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.field-type {
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+  background-color: var(--primary-light);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+}
+
+.field-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.field-control-btn {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.field-control-btn:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.field-delete {
+  color: #d32f2f;
+}
+
+.field-delete:hover {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.field-body {
+  margin-top: 0.5rem;
+}
+
+.field-required {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  color: #d32f2f;
+}
+
+/* Field editor */
+.field-editor {
+  background-color: #f9f7ff;
+  border: 1px solid var(--primary-light);
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.field-editor-title {
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.editor-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.editor-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+.preview-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px dashed var(--primary-light);
+  border-radius: 6px;
+}
+
+.preview-title {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.drag-handle {
+  cursor: move;
+  color: #999;
+  margin-right: 0.5rem;
+}
+
+/* Action buttons */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.action-left {
+  display: flex;
+  gap: 1rem;
+}
+
+.hint-text {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+} 

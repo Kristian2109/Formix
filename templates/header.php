@@ -8,8 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Main CSS (Required) -->
+
     <link rel="stylesheet" href="assets/css/main.css">
     
     <?php
@@ -23,16 +22,23 @@
             break;
         case 'login':
         case 'register':
-        case 'create_form':
         case 'my_forms':
         case 'my_answers':
             echo '<link rel="stylesheet" href="assets/css/pages/forms.css">';
+            break;
+        case 'create_form':
+        case 'edit_form':
+            echo '<link rel="stylesheet" href="assets/css/pages/forms.css">';
+            echo '<link rel="stylesheet" href="assets/css/pages/form-builder.css">';
             break;
         default:
             // Default CSS if needed
             break;
     }
     ?>
+    
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
