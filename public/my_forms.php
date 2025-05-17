@@ -56,7 +56,10 @@ $forms = get_user_forms($_SESSION['user_id']);
                             <i class="fas fa-eye"></i> Preview
                         </a>
                         <a href="view_responses.php?id=<?= $form['id'] ?>" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-chart-bar"></i> Responses
+                            <i class="fas fa-list"></i> Responses
+                        </a>
+                        <a href="form_submissions_chart.php?id=<?= $form['id'] ?>" class="btn btn-primary btn-sm">
+                            <i class="fas fa-chart-line"></i> Analytics
                         </a>
                     </div>
                 </div>

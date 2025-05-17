@@ -227,6 +227,29 @@ function get_submission($submission_id) {
     return $submission;
 }
 
+// Get all submissions made by a user
+function get_user_submissions($user_id) {
+    $db = get_forms_db();
+    
+    $stmt = $db->prepare("SELECT s.id, s.form_id, s.submission_time, f.name as form_name, f.description as form_description
+                         FROM form_submissions s 
+                         JOIN forms f ON s.form_id = f.id
+                         WHERE s.user_id = ? 
+                         ORDER BY s.submission_time DESC");
+    $stmt->execute([$user_id]);
+    
+    $submissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Get a sample of values (first 3) for each submission to show as preview
+    foreach ($submissions as &$submission) {
+        $values = get_submission_values($submission['id']);
+        $submission['preview_values'] = array_slice($values, 0, 3);
+        $submission['total_fields'] = count($values);
+    }
+    
+    return $submissions;
+}
+
 // Initialize database on include
 init_forms_db();
 ?> 

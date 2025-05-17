@@ -62,6 +62,11 @@ else {
                 <a href="my_forms.php" class="btn btn-secondary btn-sm">
                     <i class="fas fa-arrow-left"></i> Back to My Forms
                 </a>
+                <?php if (!empty($submissions)): ?>
+                <a href="download_responses.php?id=<?= $form_id ?>" class="btn btn-success btn-sm">
+                    <i class="fas fa-download"></i> Download as CSV
+                </a>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>
@@ -175,6 +180,17 @@ else {
 
 .back-link {
     text-align: right;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-success {
+    background-color: #4caf50;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #388e3c;
 }
 
 .submissions-summary {
@@ -296,6 +312,33 @@ else {
     font-style: italic;
     text-align: center;
     padding: 2rem 0;
+}
+
+@media (max-width: 768px) {
+    .responses-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .back-link {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .table-header, .table-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .header-cell:not(:first-child) {
+        display: none;
+    }
+    
+    .table-cell {
+        padding: 0.3rem 0;
+    }
 }
 </style>
 

@@ -23,8 +23,13 @@
         case 'login':
         case 'register':
         case 'my_forms':
-        case 'my_answers':
             echo '<link rel="stylesheet" href="assets/css/pages/forms.css">';
+            break;
+        case 'my_answers':
+            echo '<link rel="stylesheet" href="assets/css/pages/my-answers.css">';
+            break;
+        case 'view_submission':
+            echo '<link rel="stylesheet" href="assets/css/pages/view-submission.css">';
             break;
         case 'create_form':
         case 'edit_form':
