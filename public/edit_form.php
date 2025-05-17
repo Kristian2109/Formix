@@ -173,22 +173,13 @@ function get_field_type_label($type) {
                 </div>
                 
                 <div class="editor-row">
-                    <div class="editor-field">
-                        <div class="checkbox-wrapper">
-                            <input type="checkbox" name="is_required" id="is_required">
-                            <label for="is_required">Required Field</label>
-                        </div>
-                        <p class="hint-text">If checked, users must fill out this field to submit the form</p>
-                    </div>
-                </div>
-                
-                <div class="preview-section">
-                    <div class="preview-title">Field Preview</div>
-                    <div id="fieldPreview">
-                        <!-- Preview will be updated via JavaScript -->
-                        <div class="form-group">
-                            <label>Sample Field <span class="field-required" style="display: none;">*</span></label>
-                            <input type="text" class="preview-input">
+                    <div class="editor-field required-field-row">
+                        <div class="required-field-container">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" name="is_required" id="is_required">
+                                <label for="is_required">Required Field</label>
+                            </div>
+                            <p class="hint-text">If checked, users must fill out this field to submit the form</p>
                         </div>
                     </div>
                 </div>
@@ -210,65 +201,31 @@ function get_field_type_label($type) {
     </div>
 </div>
 
-<script>
-// Simple preview functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const typeRadios = document.querySelectorAll('input[name="field_type"]');
-    const isRequired = document.getElementById('is_required');
-    const fieldName = document.getElementById('field_name');
-    const previewContainer = document.getElementById('fieldPreview');
-    const requiredMark = previewContainer.querySelector('.field-required');
-    let previewInput = previewContainer.querySelector('.preview-input');
-    
-    // Update preview on change
-    function updatePreview() {
-        // Update label
-        previewLabel.textContent = fieldName.value || 'Sample Field';
-        
-        // Show/hide required marker
-        requiredMark.style.display = isRequired.checked ? 'inline' : 'none';
-        
-        // Get selected field type
-        let selectedType = 'text'; // default
-        typeRadios.forEach(radio => {
-            if (radio.checked) {
-                selectedType = radio.value;
-            }
-        });
-        
-        // Update input type
-        if (selectedType === 'textarea') {
-            if (previewInput.tagName !== 'TEXTAREA') {
-                const textarea = document.createElement('textarea');
-                textarea.className = 'preview-input';
-                textarea.rows = 3;
-                previewInput.replaceWith(textarea);
-                previewInput = textarea;
-            }
-        } else {
-            if (previewInput.tagName === 'TEXTAREA') {
-                const input = document.createElement('input');
-                input.type = selectedType;
-                input.className = 'preview-input';
-                previewInput.replaceWith(input);
-                previewInput = input;
-            } else {
-                previewInput.type = selectedType;
-            }
-        }
-    }
-    
-    // Add event listeners to all radio buttons
-    typeRadios.forEach(radio => {
-        radio.addEventListener('change', updatePreview);
-    });
-    
-    isRequired.addEventListener('change', updatePreview);
-    fieldName.addEventListener('input', updatePreview);
-    
-    // Initialize preview
-    updatePreview();
-});
-</script>
+<style>
+.required-field-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.required-field-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 30px;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    min-width: 140px;
+}
+
+.hint-text {
+    margin: 0;
+    flex: 1;
+}
+</style>
 
 <?php include '../templates/footer.php'; ?> 
