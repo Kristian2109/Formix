@@ -3,7 +3,7 @@ session_start();
 require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 
-// Redirect if not logged in
+
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -17,25 +17,25 @@ if (!$form_id) {
     exit;
 }
 
-// Check if the form belongs to the current user
+
 $form = get_form($form_id);
 if (!$form || $form['user_id'] != $_SESSION['user_id']) {
     header('Location: my_forms.php');
     exit;
 }
 
-// Get existing fields
+
 $fields = get_form_fields($form_id);
 
-// Handle field operations
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     
-    // Add new field
+
     if ($action === 'add_field') {
         $field_type = $_POST['field_type'] ?? '';
         $field_name = $_POST['field_name'] ?? '';
-        $field_order = count($fields) + 1; // Add to the end
+        $field_order = count($fields) + 1;
         $is_required = isset($_POST['is_required']) ? 1 : 0;
         
         if (empty($field_name) || empty($field_type)) {
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $field_id = add_form_field($form_id, $field_type, $field_name, $field_order, $is_required);
             if ($field_id) {
-                // Refresh fields list
+
                 $fields = get_form_fields($form_id);
                 $message = "Field added successfully";
             } else {
@@ -52,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Delete field
+
     if ($action === 'delete_field' && isset($_POST['field_id'])) {
         $field_id = $_POST['field_id'];
         if (delete_form_field($field_id)) {
-            // Refresh fields list
+
             $fields = get_form_fields($form_id);
             $message = "Field deleted successfully";
         } else {
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Helper function to display field type nicely
+
 function get_field_type_label($type) {
     switch ($type) {
         case 'text':
@@ -93,7 +93,7 @@ function get_field_type_label($type) {
             <p>Add fields to your form below. You can rearrange them by dragging and dropping.</p>
         </div>
         
-        <!-- Form Fields Section -->
+        
         <div class="form-section">
             <div class="section-title">Form Fields</div>
             
@@ -130,7 +130,7 @@ function get_field_type_label($type) {
             <?php endif; ?>
         </div>
         
-        <!-- Add Field Section -->
+        
         <div class="form-section">
             <div class="section-title">Add a New Field</div>
             
@@ -190,7 +190,7 @@ function get_field_type_label($type) {
             </form>
         </div>
         
-        <!-- Form Actions -->
+        
         <div class="form-actions">
             <div class="action-left">
                 <a href="my_forms.php" class="btn btn-secondary">Back to My Forms</a>

@@ -4,7 +4,6 @@ require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 require_once '../logic/charts.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -16,17 +15,14 @@ if (!$form_id) {
     exit;
 }
 
-// Check if the form belongs to the current user
 $form = get_form($form_id);
 if (!$form || $form['user_id'] != $_SESSION['user_id']) {
     header('Location: my_forms.php');
     exit;
 }
 
-// Get date range from request or use default (30 days)
 $days_range = isset($_GET['range']) && is_numeric($_GET['range']) ? (int)$_GET['range'] : 30;
 
-// Get chart data
 $chart_data = get_form_submissions_chart_data($form_id, $days_range);
 ?>
 <?php include '../templates/header.php'; ?>
@@ -153,20 +149,16 @@ $chart_data = get_form_submissions_chart_data($form_id, $days_range);
 }
 </style>
 
-<!-- Include Chart.js library -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-// Parse chart data from PHP
 const chartData = <?= json_encode($chart_data) ?>;
 
-// Format dates for display
 const formattedLabels = chartData.labels.map(date => {
     const dateObj = new Date(date);
     return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 });
 
-// Create the chart
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('submissionsChart').getContext('2d');
     
@@ -220,7 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Function to change the date range
 function changeRange(range) {
     window.location.href = 'form_submissions_chart.php?id=<?= $form_id ?>&range=' + range;
 }

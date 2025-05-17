@@ -71,12 +71,6 @@ $submissions = get_user_submissions($_SESSION['user_id']);
                     </div>
                     
                     <div class="submission-footer">
-                        <?php if ($submission['total_fields'] > count($submission['preview_values'])): ?>
-                            <span class="more-fields">
-                                +<?= $submission['total_fields'] - count($submission['preview_values']) ?> more fields
-                            </span>
-                        <?php endif; ?>
-                        
                         <a href="view_submission.php?id=<?= $submission['id'] ?>" class="view-details">
                             View Full Response <i class="fas fa-arrow-right"></i>
                         </a>

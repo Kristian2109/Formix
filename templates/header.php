@@ -12,10 +12,8 @@
     <link rel="stylesheet" href="assets/css/main.css">
     
     <?php
-    // Get current page
     $current_page = basename($_SERVER['PHP_SELF'], '.php');
     
-    // Load page-specific CSS
     switch ($current_page) {
         case 'index':
             echo '<link rel="stylesheet" href="assets/css/pages/home.css">';
@@ -44,12 +42,10 @@
             echo '<link rel="stylesheet" href="assets/css/pages/preview.css">';
             break;
         default:
-            // Default CSS if needed
             break;
     }
     ?>
     
-    <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 

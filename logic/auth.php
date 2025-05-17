@@ -8,7 +8,6 @@ function get_db() {
 function init_auth_db() {
     $db = get_db();
     
-    // Create users table if it doesn't exist
     $db->exec("CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE NOT NULL,
@@ -76,6 +75,5 @@ function get_user_email($user_id) {
     }
 }
 
-// Initialize the database when this file is included
 init_auth_db();
 ?>

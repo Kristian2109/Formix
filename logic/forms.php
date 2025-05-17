@@ -2,13 +2,12 @@
 require_once __DIR__ . '/auth.php';
 
 function get_forms_db() {
-    return get_db(); // Use the same database connection
+    return get_db();
 }
 
 function init_forms_db() {
     $db = get_forms_db();
     
-    // Create forms table
     $db->exec("CREATE TABLE IF NOT EXISTS forms (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
@@ -21,7 +20,6 @@ function init_forms_db() {
         FOREIGN KEY (user_id) REFERENCES users(id)
     )");
     
-    // Check if require_auth column exists, if not add it
     $result = $db->query("PRAGMA table_info(forms)");
     $columns = $result->fetchAll(PDO::FETCH_ASSOC);
     $hasRequireAuth = false;
@@ -35,7 +33,6 @@ function init_forms_db() {
         $db->exec("ALTER TABLE forms ADD COLUMN require_auth INTEGER DEFAULT 0");
     }
     
-    // Create form fields table
     $db->exec("CREATE TABLE IF NOT EXISTS form_fields (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         form_id INTEGER NOT NULL,
@@ -46,7 +43,6 @@ function init_forms_db() {
         FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE CASCADE
     )");
     
-    // Create form submissions table
     $db->exec("CREATE TABLE IF NOT EXISTS form_submissions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         form_id INTEGER NOT NULL,
@@ -56,7 +52,6 @@ function init_forms_db() {
         FOREIGN KEY (user_id) REFERENCES users(id)
     )");
     
-    // Create form field values table
     $db->exec("CREATE TABLE IF NOT EXISTS form_field_values (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         submission_id INTEGER NOT NULL,
@@ -67,7 +62,6 @@ function init_forms_db() {
     )");
 }
 
-// Create a new form
 function create_form($user_id, $name, $description, $password, $allow_multiple_submissions, $require_auth = 0) {
     $db = get_forms_db();
     
@@ -78,7 +72,6 @@ function create_form($user_id, $name, $description, $password, $allow_multiple_s
     return $db->lastInsertId();
 }
 
-// Add a field to a form
 function add_form_field($form_id, $type, $name, $field_order, $is_required) {
     $db = get_forms_db();
     
@@ -89,7 +82,6 @@ function add_form_field($form_id, $type, $name, $field_order, $is_required) {
     return $db->lastInsertId();
 }
 
-// Get a form by ID
 function get_form($form_id) {
     $db = get_forms_db();
     
@@ -99,7 +91,6 @@ function get_form($form_id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Get all forms for a user
 function get_user_forms($user_id) {
     $db = get_forms_db();
     
@@ -109,7 +100,6 @@ function get_user_forms($user_id) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Get all fields for a form
 function get_form_fields($form_id) {
     $db = get_forms_db();
     
@@ -119,7 +109,6 @@ function get_form_fields($form_id) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Delete a form field
 function delete_form_field($field_id) {
     $db = get_forms_db();
     
@@ -129,7 +118,6 @@ function delete_form_field($field_id) {
     return $stmt->rowCount() > 0;
 }
 
-// Update form field order
 function update_field_order($field_id, $new_order) {
     $db = get_forms_db();
     
@@ -139,19 +127,16 @@ function update_field_order($field_id, $new_order) {
     return $stmt->rowCount() > 0;
 }
 
-// Submit a form
 function submit_form($form_id, $field_values, $user_id = null) {
     $db = get_forms_db();
     
     try {
         $db->beginTransaction();
         
-        // Create submission record
         $stmt = $db->prepare("INSERT INTO form_submissions (form_id, user_id) VALUES (?, ?)");
         $stmt->execute([$form_id, $user_id]);
         $submission_id = $db->lastInsertId();
         
-        // Insert field values
         $stmt = $db->prepare("INSERT INTO form_field_values (submission_id, field_id, value) VALUES (?, ?, ?)");
         foreach ($field_values as $field_id => $value) {
             $stmt->execute([$submission_id, $field_id, $value]);
@@ -165,7 +150,6 @@ function submit_form($form_id, $field_values, $user_id = null) {
     }
 }
 
-// Check if a user has already submitted a form
 function has_user_submitted_form($form_id, $user_id) {
     $db = get_forms_db();
     
@@ -176,7 +160,6 @@ function has_user_submitted_form($form_id, $user_id) {
     return $result['count'] > 0;
 }
 
-// Get form submissions
 function get_form_submissions($form_id) {
     $db = get_forms_db();
     
@@ -190,29 +173,25 @@ function get_form_submissions($form_id) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Get all field values for a submission
 function get_submission_values($submission_id) {
     $db = get_forms_db();
     
     $stmt = $db->prepare("SELECT v.*, f.name as field_name, f.type as field_type
                          FROM form_field_values v
                          JOIN form_fields f ON v.field_id = f.id
-                         WHERE v.submission_id = ?
-                         ORDER BY f.field_order ASC");
+                         WHERE v.submission_id = ?");
     $stmt->execute([$submission_id]);
     
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Get a single submission with all its values
 function get_submission($submission_id) {
     $db = get_forms_db();
     
-    // Get submission info
-    $stmt = $db->prepare("SELECT s.*, u.email as user_email, f.name as form_name
-                         FROM form_submissions s 
-                         LEFT JOIN users u ON s.user_id = u.id
+    $stmt = $db->prepare("SELECT s.*, f.name as form_name, f.user_id as form_owner_id, u.email as user_email
+                         FROM form_submissions s
                          JOIN forms f ON s.form_id = f.id
+                         LEFT JOIN users u ON s.user_id = u.id
                          WHERE s.id = ?");
     $stmt->execute([$submission_id]);
     $submission = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -221,35 +200,37 @@ function get_submission($submission_id) {
         return null;
     }
     
-    // Get all values for this submission
-    $submission['values'] = get_submission_values($submission_id);
+    $values = get_submission_values($submission_id);
+    $submission['values'] = $values;
     
     return $submission;
 }
 
-// Get all submissions made by a user
 function get_user_submissions($user_id) {
     $db = get_forms_db();
     
-    $stmt = $db->prepare("SELECT s.id, s.form_id, s.submission_time, f.name as form_name, f.description as form_description
-                         FROM form_submissions s 
+    $stmt = $db->prepare("SELECT s.*, f.name as form_name
+                         FROM form_submissions s
                          JOIN forms f ON s.form_id = f.id
-                         WHERE s.user_id = ? 
+                         WHERE s.user_id = ?
                          ORDER BY s.submission_time DESC");
     $stmt->execute([$user_id]);
     
-    $submissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Get a sample of values (first 3) for each submission to show as preview
-    foreach ($submissions as &$submission) {
-        $values = get_submission_values($submission['id']);
-        $submission['preview_values'] = array_slice($values, 0, 3);
-        $submission['total_fields'] = count($values);
-    }
-    
-    return $submissions;
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Initialize database on include
+function get_submission_preview_values($submission_id, $limit = 3) {
+    $db = get_forms_db();
+    
+    $stmt = $db->prepare("SELECT v.*, f.name as field_name, f.type as field_type
+                         FROM form_field_values v
+                         JOIN form_fields f ON v.field_id = f.id
+                         WHERE v.submission_id = ?
+                         LIMIT ?");
+    $stmt->execute([$submission_id, $limit]);
+    
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 init_forms_db();
 ?> 

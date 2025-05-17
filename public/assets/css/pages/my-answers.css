@@ -22,6 +22,12 @@
   margin: 0 auto;
 }
 
+.page-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
 /* Empty state */
 .empty-answers {
   background-color: #f9f7ff;
