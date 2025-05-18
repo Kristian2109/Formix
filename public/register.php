@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $message = register_user($email, $password);
     
-    // Check if registration was successful
     if ($message === "Registration successful.") {
         $success = true;
     }
