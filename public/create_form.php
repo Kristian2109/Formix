@@ -3,7 +3,6 @@ session_start();
 require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -12,7 +11,6 @@ if (!isset($_SESSION['user_id'])) {
 $message = '';
 $form_id = null;
 
-// Handle form creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_form') {
     $name = $_POST['form_name'] ?? '';
     $description = $_POST['form_description'] ?? '';
@@ -122,16 +120,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
-<style>
-.hint-list {
-    margin: 0.5rem 0 0 1.5rem;
-    color: #666;
-    font-size: 0.85rem;
-}
-.hint-list li {
-    margin-bottom: 0.3rem;
-}
-</style>
 
 <?php include '../templates/footer.php'; ?> 
