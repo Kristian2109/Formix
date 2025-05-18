@@ -3,11 +3,6 @@ require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 session_start();
 
-// Initialize both sets of tables in the single database
-init_auth_db();
-init_forms_db();
-
-// Redirect if user is already logged in
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit;
