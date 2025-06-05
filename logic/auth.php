@@ -1,6 +1,14 @@
 <?php
 function get_db() {
-    $db = new PDO('sqlite:' . __DIR__ . '/../data/formix.db');
+    $dataDir = __DIR__ . '/../data';
+
+    // Create data directory if it doesn't exist
+    if (!is_dir($dataDir)) {
+        mkdir($dataDir, 0777, true); // 0777 for full access, 'true' to create nested dirs
+    }
+
+    $dbPath = $dataDir . '/formix.db';
+    $db = new PDO('sqlite:' . $dbPath);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $db;
 }
