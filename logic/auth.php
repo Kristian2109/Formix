@@ -2,9 +2,8 @@
 function get_db() {
     $dataDir = __DIR__ . '/../data';
 
-    // Create data directory if it doesn't exist
     if (!is_dir($dataDir)) {
-        mkdir($dataDir, 0777, true); // 0777 for full access, 'true' to create nested dirs
+        mkdir($dataDir, 0777, true);
     }
 
     $dbPath = $dataDir . '/formix.db';
