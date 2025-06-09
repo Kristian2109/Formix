@@ -6,7 +6,7 @@ function get_db() {
         mkdir($dataDir, 0777, true);
     }
 
-    $dbPath = $dataDir . '/formix.db';
+    $dbPath = $dataDir . '/formica.db';
     $db = new PDO('sqlite:' . $dbPath);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $db;
