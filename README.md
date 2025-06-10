@@ -1,6 +1,6 @@
-# Formix - Form Management System
+# Formica - Form Management System
 
-Formix is a comprehensive web-based form management system that allows users to create, manage, and analyze custom forms and surveys. Built with PHP, this application provides an intuitive interface for designing forms, collecting responses, and visualizing submission data.
+Formica is a comprehensive web-based form management system that allows users to create, manage, and analyze custom forms and surveys. Built with PHP, this application provides an intuitive interface for designing forms, collecting responses, and visualizing submission data.
 
 ## Features
 
