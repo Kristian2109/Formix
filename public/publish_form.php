@@ -25,7 +25,8 @@ $fields = get_form_fields($form_id);
 
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'];
-$form_url = "{$protocol}://{$host}/fill_form.php?id={$form_id}";
+$path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+$form_url = "{$protocol}://{$host}{$path}/fill_form.php?id={$form_id}";
 ?>
 <?php include '../templates/header.php'; ?>
 
