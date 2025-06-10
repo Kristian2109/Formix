@@ -105,12 +105,20 @@ include '../templates/header.php';
                                         <i class="fas fa-hashtag"></i>
                                     </span>
                                 <?php elseif ($field['type'] === 'file'): ?>
-                                    <input 
-                                        type="file" 
-                                        id="field_<?= $field['id'] ?>" 
-                                        name="field_<?= $field['id'] ?>"
-                                        <?= $field['is_required'] ? 'required' : '' ?>
-                                    >
+                                    <div class="file-input-wrapper">
+                                        <label for="field_<?= $field['id'] ?>" class="file-input-label btn">
+                                            <i class="fas fa-upload"></i>
+                                            <span>Choose a file...</span>
+                                        </label>
+                                        <input 
+                                            type="file" 
+                                            id="field_<?= $field['id'] ?>" 
+                                            name="field_<?= $field['id'] ?>"
+                                            class="file-input-native"
+                                            <?= $field['is_required'] ? 'required' : '' ?>
+                                        >
+                                        <span class="file-input-filename"></span>
+                                    </div>
                                 <?php else: ?>
                                     <input 
                                         type="text" 

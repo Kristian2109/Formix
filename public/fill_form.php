@@ -211,12 +211,20 @@ if (isset($form) && $form && $form_authenticated && empty($success_message)) {
                                     <i class="fas fa-hashtag"></i>
                                 </span>
                             <?php elseif ($field['type'] === 'file'): ?>
-                                <input 
-                                    type="file" 
-                                    id="field_<?= $field['id'] ?>" 
-                                    name="field_<?= $field['id'] ?>"
-                                    <?= $field['is_required'] ? 'required' : '' ?>
-                                >
+                                <div class="file-input-wrapper">
+                                    <label for="field_<?= $field['id'] ?>" class="file-input-label btn">
+                                        <i class="fas fa-upload"></i>
+                                        <span>Choose a file...</span>
+                                    </label>
+                                    <input 
+                                        type="file" 
+                                        id="field_<?= $field['id'] ?>" 
+                                        name="field_<?= $field['id'] ?>"
+                                        class="file-input-native"
+                                        <?= $field['is_required'] ? 'required' : '' ?>
+                                    >
+                                    <span class="file-input-filename"></span>
+                                </div>
                             <?php else: ?>
                                 <input 
                                     type="text" 
@@ -248,5 +256,22 @@ if (isset($form) && $form && $form_authenticated && empty($success_message)) {
         </div>
     <?php endif; ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInputs = document.querySelectorAll('.file-input-native');
+    
+    fileInputs.forEach(function(input) {
+        input.addEventListener('change', function(e) {
+            const fileNameDisplay = e.target.closest('.file-input-wrapper').querySelector('.file-input-filename');
+            if (e.target.files.length > 0) {
+                fileNameDisplay.textContent = e.target.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        });
+    });
+});
+</script>
 
 <?php include '../templates/footer.php'; ?> 
