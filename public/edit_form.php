@@ -63,6 +63,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = "Failed to delete field";
         }
     }
+
+    if ($action === 'update_css') {
+        $custom_css = $_POST['custom_css'] ?? '';
+        if (update_form_css($form_id, $custom_css)) {
+            $form['custom_css'] = $custom_css;
+            $message = "Custom styles saved successfully";
+        } else {
+            $message = "Failed to save custom styles";
+        }
+    }
 }
 
 
@@ -197,6 +207,49 @@ function get_field_type_label($type) {
                 <a href="preview_form.php?id=<?= $form_id ?>" class="btn btn-secondary">Preview Form</a>
             </div>
             <a href="publish_form.php?id=<?= $form_id ?>" class="btn btn-primary">Publish Form</a>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="section-title">Custom Styles</div>
+        <p>Add your own CSS to customize the appearance of your form. These styles will be applied to the public form page.</p>
+        
+        <div class="css-editor-container">
+            <form method="POST" class="css-editor-form">
+                <input type="hidden" name="action" value="update_css">
+                <div class="form-group">
+                    <label for="custom_css">Custom CSS</label>
+                    <textarea id="custom_css" name="custom_css" rows="15" class="css-editor"><?= htmlspecialchars($form['custom_css'] ?? '') ?></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Styles</button>
+                </div>
+            </form>
+
+            <div class="css-guidelines">
+                <div class="guidelines-header">
+                    <i class="fas fa-info-circle"></i>
+                    Styling Guide
+                </div>
+                <p>Use these selectors to style your form. Your styles will override the defaults.</p>
+                <ul>
+                    <li><code>.form-container</code>: The main form wrapper.</li>
+                    <li><code>.form-header h2</code>: The form's main title.</li>
+                    <li><code>.form-description</code>: The description text.</li>
+                    <li><code>.form-group</code>: The wrapper for a single field.</li>
+                    <li><code>.public-form label</code>: The text label for a field.</li>
+                    <li><code>.public-form input, .public-form textarea</code>: Input fields.</li>
+                    <li><code>.public-form button[type="submit"]</code>: The submit button.</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <pre><code>.form-header h2 {
+    color: #007bff;
+}
+
+.public-form button[type="submit"] {
+    background-color: #28a745;
+}</code></pre>
+            </div>
         </div>
     </div>
 </div>

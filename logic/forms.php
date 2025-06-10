@@ -23,14 +23,20 @@ function init_forms_db() {
     $result = $db->query("PRAGMA table_info(forms)");
     $columns = $result->fetchAll(PDO::FETCH_ASSOC);
     $hasRequireAuth = false;
+    $hasCustomCss = false;
     foreach ($columns as $column) {
         if ($column['name'] === 'require_auth') {
             $hasRequireAuth = true;
-            break;
+        }
+        if ($column['name'] === 'custom_css') {
+            $hasCustomCss = true;
         }
     }
     if (!$hasRequireAuth) {
         $db->exec("ALTER TABLE forms ADD COLUMN require_auth INTEGER DEFAULT 0");
+    }
+    if (!$hasCustomCss) {
+        $db->exec("ALTER TABLE forms ADD COLUMN custom_css TEXT");
     }
     
     $db->exec("CREATE TABLE IF NOT EXISTS form_fields (
@@ -114,6 +120,15 @@ function delete_form_field($field_id) {
     
     $stmt = $db->prepare("DELETE FROM form_fields WHERE id = ?");
     $stmt->execute([$field_id]);
+    
+    return $stmt->rowCount() > 0;
+}
+
+function update_form_css($form_id, $custom_css) {
+    $db = get_forms_db();
+    
+    $stmt = $db->prepare("UPDATE forms SET custom_css = ? WHERE id = ?");
+    $stmt->execute([$custom_css, $form_id]);
     
     return $stmt->rowCount() > 0;
 }

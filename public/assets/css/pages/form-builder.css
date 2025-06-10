@@ -270,10 +270,85 @@
 .form-actions {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-top: 2rem;
 }
 
 .action-left {
   display: flex;
   gap: 1rem;
+}
+
+.css-editor-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.css-editor-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.css-editor {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  width: 100%;
+  min-height: 200px;
+}
+
+.css-guidelines {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.guidelines-header {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.guidelines-header i {
+  margin-right: 0.5rem;
+}
+
+.css-guidelines ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 1rem;
+}
+
+.css-guidelines li {
+  margin-bottom: 0.5rem;
+}
+
+.css-guidelines code {
+  background-color: #e0e0e0;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.css-guidelines pre {
+  background-color: #333;
+  color: #f4f4f4;
+  padding: 1rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 0.85rem;
+}
+
+.css-guidelines pre code {
+  background-color: transparent;
+  padding: 0;
 }

@@ -3,7 +3,6 @@ session_start();
 require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -16,17 +15,21 @@ if (!$form_id) {
     exit;
 }
 
-// Check if the form belongs to the current user
 $form = get_form($form_id);
 if (!$form || $form['user_id'] != $_SESSION['user_id']) {
     header('Location: my_forms.php');
     exit;
 }
 
-// Get form fields
 $fields = get_form_fields($form_id);
 ?>
-<?php include '../templates/header.php'; ?>
+<?php 
+$page_specific_styles = '';
+if (!empty($form['custom_css'])) {
+    $page_specific_styles = '<style>' . $form['custom_css'] . '</style>';
+}
+include '../templates/header.php'; 
+?>
 
 <div class="container">
     <div class="preview-header">
