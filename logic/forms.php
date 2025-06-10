@@ -9,59 +9,56 @@ function init_forms_db() {
     $db = get_forms_db();
     
     $db->exec("CREATE TABLE IF NOT EXISTS forms (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        name TEXT NOT NULL,
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        user_id INT NOT NULL,
+        name VARCHAR(255) NOT NULL,
         description TEXT,
-        password TEXT,
-        allow_multiple_submissions INTEGER DEFAULT 0,
-        require_auth INTEGER DEFAULT 0,
+        password VARCHAR(255),
+        allow_multiple_submissions BOOLEAN DEFAULT 0,
+        require_auth BOOLEAN DEFAULT 0,
+        custom_css TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )");
-    
-    $result = $db->query("PRAGMA table_info(forms)");
-    $columns = $result->fetchAll(PDO::FETCH_ASSOC);
-    $hasRequireAuth = false;
-    $hasCustomCss = false;
-    foreach ($columns as $column) {
-        if ($column['name'] === 'require_auth') {
-            $hasRequireAuth = true;
-        }
-        if ($column['name'] === 'custom_css') {
-            $hasCustomCss = true;
-        }
+
+    $config = require __DIR__ . '/config.php';
+    $db_name = $config['DB_DATABASE'];
+
+    $stmt = $db->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = 'forms' AND column_name = 'require_auth'");
+    $stmt->execute([$db_name]);
+    if (!$stmt->fetchColumn()) {
+        $db->exec("ALTER TABLE forms ADD COLUMN require_auth BOOLEAN DEFAULT 0");
     }
-    if (!$hasRequireAuth) {
-        $db->exec("ALTER TABLE forms ADD COLUMN require_auth INTEGER DEFAULT 0");
-    }
-    if (!$hasCustomCss) {
+
+    $stmt = $db->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = 'forms' AND column_name = 'custom_css'");
+    $stmt->execute([$db_name]);
+    if (!$stmt->fetchColumn()) {
         $db->exec("ALTER TABLE forms ADD COLUMN custom_css TEXT");
     }
     
     $db->exec("CREATE TABLE IF NOT EXISTS form_fields (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        form_id INTEGER NOT NULL,
-        type TEXT NOT NULL,
-        name TEXT NOT NULL,
-        field_order INTEGER NOT NULL,
-        is_required INTEGER DEFAULT 0,
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        form_id INT NOT NULL,
+        type VARCHAR(255) NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        field_order INT NOT NULL,
+        is_required BOOLEAN DEFAULT 0,
         FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE CASCADE
     )");
     
     $db->exec("CREATE TABLE IF NOT EXISTS form_submissions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        form_id INTEGER NOT NULL,
-        user_id INTEGER,
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        form_id INT NOT NULL,
+        user_id INT,
         submission_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE CASCADE,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )");
     
     $db->exec("CREATE TABLE IF NOT EXISTS form_field_values (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        submission_id INTEGER NOT NULL,
-        field_id INTEGER NOT NULL,
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        submission_id INT NOT NULL,
+        field_id INT NOT NULL,
         value TEXT,
         FOREIGN KEY (submission_id) REFERENCES form_submissions(id) ON DELETE CASCADE,
         FOREIGN KEY (field_id) REFERENCES form_fields(id) ON DELETE CASCADE

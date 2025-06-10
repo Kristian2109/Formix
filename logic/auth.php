@@ -1,14 +1,26 @@
 <?php
 function get_db() {
-    $dataDir = __DIR__ . '/../data';
+    static $db = null;
 
-    if (!is_dir($dataDir)) {
-        mkdir($dataDir, 0777, true);
+    if ($db === null) {
+        $config = require __DIR__ . '/config.php';
+        
+        $dsn = "mysql:host={$config['DB_HOST']};port={$config['DB_PORT']};charset=utf8mb4";
+        $username = $config['DB_USERNAME'];
+        $password = $config['DB_PASSWORD'];
+        $db_name = $config['DB_DATABASE'];
+
+        try {
+            $p_db = new PDO($dsn, $username, $password);
+            $p_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $p_db->exec("CREATE DATABASE IF NOT EXISTS `$db_name`");
+            $p_db->exec("USE `$db_name`");
+            $db = $p_db;
+        } catch (PDOException $e) {
+            die("Database connection failed: " . $e->getMessage());
+        }
     }
-
-    $dbPath = $dataDir . '/formix.db';
-    $db = new PDO('sqlite:' . $dbPath);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
     return $db;
 }
 
@@ -16,9 +28,9 @@ function init_auth_db() {
     $db = get_db();
     
     $db->exec("CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
 }
