@@ -69,6 +69,8 @@ include '../templates/header.php';
                                         <i class="fas fa-hashtag"></i>
                                     <?php elseif ($field['type'] === 'textarea'): ?>
                                         <i class="fas fa-align-left"></i>
+                                    <?php elseif ($field['type'] === 'file'): ?>
+                                        <i class="fas fa-file-upload"></i>
                                     <?php endif; ?>
                                 </span>
                                 <label for="field_<?= $field['id'] ?>">
@@ -102,6 +104,13 @@ include '../templates/header.php';
                                     <span class="input-icon">
                                         <i class="fas fa-hashtag"></i>
                                     </span>
+                                <?php elseif ($field['type'] === 'file'): ?>
+                                    <input 
+                                        type="file" 
+                                        id="field_<?= $field['id'] ?>" 
+                                        name="field_<?= $field['id'] ?>"
+                                        <?= $field['is_required'] ? 'required' : '' ?>
+                                    >
                                 <?php else: ?>
                                     <input 
                                         type="text" 

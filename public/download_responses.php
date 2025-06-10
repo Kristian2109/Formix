@@ -29,56 +29,78 @@ if (empty($fields)) {
 
 $submissions = get_form_submissions($form_id);
 
-$filename = 'form_responses_' . preg_replace('/[^a-z0-9]+/i', '_', strtolower($form['name'])) . '_' . date('Y-m-d') . '.csv';
+$zip_filename = 'form_responses_' . preg_replace('/[^a-z0-9]+/i', '_', strtolower($form['name'])) . '_' . date('Y-m-d') . '.zip';
+$zip_filepath = sys_get_temp_dir() . '/' . $zip_filename;
 
-header('Content-Type: text/csv');
-header('Content-Disposition: attachment; filename="' . $filename . '"');
-header('Pragma: no-cache');
-header('Expires: 0');
+$zip = new ZipArchive();
+if ($zip->open($zip_filepath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
+    die("An error occurred while creating the ZIP file.");
+}
 
-$output = fopen('php://output', 'w');
+$csv_string = '';
+$stream = fopen('php://memory', 'w+');
 
-$headers = array();
-
-$headers[] = 'Submission Date';
-
+$headers = ['Submission Date'];
 if ($form['require_auth']) {
     $headers[] = 'Email';
 }
-
 foreach ($fields as $field) {
     $headers[] = $field['name'];
 }
-
-fputcsv($output, $headers, ',', '"', '\\');
+fputcsv($stream, $headers, ',', '"', '\\');
 
 if (!empty($submissions)) {
     foreach ($submissions as $submission) {
-        $row = array();
-        
-        $row[] = date('Y-m-d H:i:s', strtotime($submission['submission_time']));
-        
+        $row = [date('Y-m-d H:i:s', strtotime($submission['submission_time']))];
         if ($form['require_auth']) {
             $row[] = $submission['user_email'] ?? 'Anonymous';
         }
         
         $values = get_submission_values($submission['id']);
-        
-        $valuesByFieldId = array();
+        $valuesByFieldId = [];
         foreach ($values as $value) {
-            $valuesByFieldId[$value['field_id']] = $value['value'];
+            $valuesByFieldId[$value['field_id']] = $value;
         }
         
         foreach ($fields as $field) {
-            $row[] = $valuesByFieldId[$field['id']] ?? '';
+            $field_value = $valuesByFieldId[$field['id']] ?? null;
+            if ($field['type'] === 'file' && !empty($field_value['value'])) {
+                $file_path = __DIR__ . '/../files/' . $field_value['value'];
+                if (file_exists($file_path)) {
+                    $zip->addFile($file_path, 'files/' . $field_value['value']);
+                    $row[] = 'files/' . $field_value['value'];
+                } else {
+                    $row[] = 'File not found';
+                }
+            } else {
+                $row[] = $field_value['value'] ?? '';
+            }
         }
-        
-        fputcsv($output, $row, ',', '"', '\\');
+        fputcsv($stream, $row, ',', '"', '\\');
     }
 } else {
-    fputcsv($output, ['No submissions available for this form'], ',', '"', '\\');
+    fputcsv($stream, ['No submissions available for this form'], ',', '"', '\\');
 }
 
-fclose($output);
+rewind($stream);
+$csv_string = stream_get_contents($stream);
+fclose($stream);
+
+$zip->addFromString('responses.csv', $csv_string);
+
+$zip->close();
+
+header('Content-Type: application/zip');
+header('Content-Disposition: attachment; filename="' . $zip_filename . '"');
+header('Content-Length: ' . filesize($zip_filepath));
+header('Pragma: no-cache');
+header('Expires: 0');
+
+ob_clean();
+flush();
+readfile($zip_filepath);
+
+unlink($zip_filepath);
+
 exit;
 ?> 

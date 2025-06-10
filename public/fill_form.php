@@ -50,17 +50,41 @@ if (!$form_id) {
             $field_values = [];
             $fields = get_form_fields($form_id);
             $validation_errors = [];
+
+            $upload_dir = __DIR__ . '/../files';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
             
             foreach ($fields as $field) {
                 $field_id = $field['id'];
                 $field_name = "field_{$field_id}";
-                $value = $_POST[$field_name] ?? '';
-                
-                if ($field['is_required'] && empty($value)) {
-                    $validation_errors[] = "The field '{$field['name']}' is required.";
+
+                if ($field['type'] === 'file') {
+                    if (isset($_FILES[$field_name]) && $_FILES[$field_name]['error'] == UPLOAD_ERR_OK) {
+                        $tmp_name = $_FILES[$field_name]['tmp_name'];
+                        $original_name = basename($_FILES[$field_name]['name']);
+                        $file_extension = pathinfo($original_name, PATHINFO_EXTENSION);
+                        $new_filename = uniqid('file_', true) . '.' . $file_extension;
+                        $destination = $upload_dir . '/' . $new_filename;
+
+                        if (move_uploaded_file($tmp_name, $destination)) {
+                            $field_values[$field_id] = $new_filename;
+                        } else {
+                            $validation_errors[] = "Failed to upload file for '{$field['name']}'.";
+                        }
+                    } elseif ($field['is_required']) {
+                        $validation_errors[] = "The file for '{$field['name']}' is required.";
+                    }
+                } else {
+                    $value = $_POST[$field_name] ?? '';
+                    
+                    if ($field['is_required'] && empty($value)) {
+                        $validation_errors[] = "The field '{$field['name']}' is required.";
+                    }
+                    
+                    $field_values[$field_id] = $value;
                 }
-                
-                $field_values[$field_id] = $value;
             }
             
             if (empty($validation_errors)) {
@@ -138,7 +162,7 @@ if (isset($form) && $form && $form_authenticated && empty($success_message)) {
                 <?php endif; ?>
             </div>
             
-            <form method="POST" class="public-form">
+            <form method="POST" class="public-form" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="submit_form">
                 
                 <?php foreach ($fields as $field): ?>
@@ -151,6 +175,8 @@ if (isset($form) && $form && $form_authenticated && empty($success_message)) {
                                     <i class="fas fa-hashtag"></i>
                                 <?php elseif ($field['type'] === 'textarea'): ?>
                                     <i class="fas fa-align-left"></i>
+                                <?php elseif ($field['type'] === 'file'): ?>
+                                    <i class="fas fa-file-upload"></i>
                                 <?php endif; ?>
                             </span>
                             <label for="field_<?= $field['id'] ?>">
@@ -184,6 +210,13 @@ if (isset($form) && $form && $form_authenticated && empty($success_message)) {
                                 <span class="input-icon">
                                     <i class="fas fa-hashtag"></i>
                                 </span>
+                            <?php elseif ($field['type'] === 'file'): ?>
+                                <input 
+                                    type="file" 
+                                    id="field_<?= $field['id'] ?>" 
+                                    name="field_<?= $field['id'] ?>"
+                                    <?= $field['is_required'] ? 'required' : '' ?>
+                                >
                             <?php else: ?>
                                 <input 
                                     type="text" 

@@ -84,6 +84,8 @@ function get_field_type_label($type) {
             return 'Number Input';
         case 'textarea':
             return 'Text Area';
+        case 'file':
+            return 'File Upload';
         default:
             return ucfirst($type);
     }
@@ -176,6 +178,13 @@ function get_field_type_label($type) {
                                 <label for="type_textarea">
                                     <i class="fas fa-align-left"></i>
                                     Text Area
+                                </label>
+                            </div>
+                            <div class="field-type-option">
+                                <input type="radio" id="type_file" name="field_type" value="file">
+                                <label for="type_file">
+                                    <i class="fas fa-file-upload"></i>
+                                    File Upload
                                 </label>
                             </div>
                         </div>

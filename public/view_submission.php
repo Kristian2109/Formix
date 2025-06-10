@@ -73,6 +73,12 @@ if (!$submission || $submission['user_id'] != $_SESSION['user_id']) {
                                         <p class="empty-value"><i>No answer provided</i></p>
                                     <?php elseif ($value['field_type'] === 'textarea'): ?>
                                         <p class="textarea-value"><?= nl2br(htmlspecialchars($value['value'])) ?></p>
+                                    <?php elseif ($value['field_type'] === 'file'): ?>
+                                        <a href="download_file.php?filename=<?= urlencode($value['value']) ?>" class="file-download-link" target="_blank">
+                                            <i class="fas fa-download"></i>
+                                            Download File
+                                        </a>
+                                        <p class="filename-display">(<?= htmlspecialchars($value['value']) ?>)</p>
                                     <?php else: ?>
                                         <p><?= htmlspecialchars($value['value']) ?></p>
                                     <?php endif; ?>

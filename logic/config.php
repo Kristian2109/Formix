@@ -6,5 +6,5 @@ return [
     'DB_PORT' => '3306',
     'DB_DATABASE' => 'formix',
     'DB_USERNAME' => 'root',
-    'DB_PASSWORD' => ''
+    'DB_PASSWORD' => '123Abc@)'
 ]; 
