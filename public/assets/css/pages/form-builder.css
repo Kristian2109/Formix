@@ -284,10 +284,14 @@
   grid-template-columns: 1fr;
   gap: 2rem;
   margin-top: 1.5rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.css-editor-form .form-group {
+.css-editor-form {
   margin-bottom: 1rem;
+  width: 100%;
 }
 
 .css-editor {
@@ -351,4 +355,8 @@
 .css-guidelines pre code {
   background-color: transparent;
   padding: 0;
+}
+
+.css-editor-form .form-group {
+  margin-bottom: 1rem;
 }
