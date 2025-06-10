@@ -237,18 +237,18 @@ function get_field_type_label($type) {
                     <li><code>.form-header h2</code>: The form's main title.</li>
                     <li><code>.form-description</code>: The description text.</li>
                     <li><code>.form-group</code>: The wrapper for a single field.</li>
+                    <li><code>.field-type-text</code>: Wrapper for a text input field.</li>
+                    <li><code>.field-type-number</code>: Wrapper for a number input field.</li>
+                    <li><code>.field-type-textarea</code>: Wrapper for a text area field.</li>
                     <li><code>.public-form label</code>: The text label for a field.</li>
-                    <li><code>.public-form input, .public-form textarea</code>: Input fields.</li>
+                    <li><code>.field-required</code>: The required field indicator (*).</li>
+                    <li><code>.field-icon</code>: The icon next to the field label.</li>
+                    <li><code>.input-icon</code>: The icon inside the input field.</li>
+                    <li><code>.public-form input, .public-form textarea</code>: All input fields.</li>
+                    <li><code>.public-form input:focus</code>: A focused input field.</li>
                     <li><code>.public-form button[type="submit"]</code>: The submit button.</li>
+                    <li><code>.public-form button[type="submit"]:hover</code>: The submit button on hover.</li>
                 </ul>
-                <p><strong>Example:</strong></p>
-                <pre><code>.form-header h2 {
-    color: #007bff;
-}
-
-.public-form button[type="submit"] {
-    background-color: #28a745;
-}</code></pre>
             </div>
         </div>
     </div>
