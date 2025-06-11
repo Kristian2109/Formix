@@ -34,7 +34,7 @@ formix/
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/formix.git
+   git clone https://github.com/Kristian2109/formix.git
    cd formix
    ```
 

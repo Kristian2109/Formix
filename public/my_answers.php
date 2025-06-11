@@ -3,13 +3,11 @@ session_start();
 require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
 
-// Get all submissions for the current user
 $submissions = get_user_submissions($_SESSION['user_id']);
 ?>
 <?php include '../templates/header.php'; ?>

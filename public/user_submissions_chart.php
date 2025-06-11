@@ -4,16 +4,13 @@ require_once '../logic/auth.php';
 require_once '../logic/forms.php';
 require_once '../logic/charts.php';
 
-// Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
 
-// Get date range from request or use default (30 days)
 $days_range = isset($_GET['range']) && is_numeric($_GET['range']) ? (int)$_GET['range'] : 30;
 
-// Get chart data
 $chart_data = get_user_submissions_chart_data($_SESSION['user_id'], $days_range);
 ?>
 <?php include '../templates/header.php'; ?>
